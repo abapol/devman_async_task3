@@ -43,6 +43,7 @@ async def archivate(request, parser_args):
             await response.write(stdout)
             await asyncio.sleep(parser_args.delay)
     except asyncio.CancelledError:
+        logging.info(u'CancelledError')
         raise
     finally:
         if process.returncode:
