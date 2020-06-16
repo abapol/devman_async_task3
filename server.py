@@ -12,7 +12,7 @@ async def archivate(request, parser_args):
     if parser_args.log:
         logging.basicConfig(level = logging.INFO)
 
-    archive_hash = request.match_info.get('archive_hash')
+    archive_hash = request.match_info['archive_hash']
     basic_path = parser_args.folder
     
     if not os.path.exists(basic_path + archive_hash):
@@ -43,10 +43,11 @@ async def archivate(request, parser_args):
             await response.write(stdout)
             await asyncio.sleep(parser_args.delay)
     except asyncio.CancelledError:
-        process.kill()
-        await process.communicate()
         raise
     finally:
+        if process.returncode:
+            process.kill()
+            await process.communicate()
         return response
     
 
