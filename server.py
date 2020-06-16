@@ -1,4 +1,5 @@
 from aiohttp import web
+from functools import partial
 import aiofiles
 import argparse
 import asyncio
@@ -7,10 +8,10 @@ import logging
 import os
 
 
-global parser_args    
+async def archivate(request, parser_args):
+    if parser_args.log:
+        logging.basicConfig(level = logging.INFO)
 
-async def archivate(request):
-    global parser_args
     archive_hash = request.match_info.get('archive_hash')
     basic_path = parser_args.folder
     
@@ -56,14 +57,11 @@ async def handle_index_page(request):
 
 
 if __name__ == '__main__':
-    global parser_args
     parser = argparse.ArgumentParser()
     parser.add_argument('--log', action='store_true', help="Activate debug-mode of logging")
     parser.add_argument('--delay', type=float, default=0, help="Delay of response")
     parser.add_argument('--folder', type=str, default='test_photos/', help="Directory with foto-files")
-    parser_args = parser.parse_args()
-    if parser_args.log:
-        logging.basicConfig(level = logging.DEBUG)
+    archivate = partial(archivate, parser_args=parser.parse_args())
         
     app = web.Application(loop=asyncio.get_event_loop())
     app.add_routes([
