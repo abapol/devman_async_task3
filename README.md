@@ -21,3 +21,21 @@ python server.py
 ```
 
 The server will start on port 8080, to check its operation, go to the browser on the page http://0.0.0.0:8080/.
+
+
+## Arguments
+
+You can use this arguments:
+
+--log : For activate debug-mode of logging
+
+--delay : For set delay of response in seconds
+
+--folder : To set your directory with foto-files
+
+Example:
+
+```bash
+python server.py --log --delay=0.5 --folder='images/'
+```
+
